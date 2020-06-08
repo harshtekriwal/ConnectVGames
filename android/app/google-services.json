@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "311834325458",
+    "firebase_url": "https://flutter-connectviagames.firebaseio.com",
+    "project_id": "flutter-connectviagames",
+    "storage_bucket": "flutter-connectviagames.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:311834325458:android:3a16e430bae0909202980b",
+        "android_client_info": {
+          "package_name": "com.example.ConnectWithGames"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "311834325458-pjib8hrdvbujr8l4n98cferv82ieqpv9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.ConnectWithGames",
+            "certificate_hash": "535a81ae8ee270f38c31a5a4e24c444630a60c87"
+          }
+        },
+        {
+          "client_id": "311834325458-6pjda25s54u9g7maim4a9akgl70hf66b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBsvEx5or0m7U3gZhbGHKZUlNVEodITCyo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "311834325458-6pjda25s54u9g7maim4a9akgl70hf66b.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
