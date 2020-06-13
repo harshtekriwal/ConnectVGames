@@ -58,7 +58,7 @@ class _AuthScreenState extends State<AuthScreen> {
                         ],
                       ),
                       child: Text(
-                        'ConnectViaGames',
+                        'ConnectVGames',
                         style: TextStyle(
                           color:
                               Theme.of(context).accentTextTheme.headline6.color,

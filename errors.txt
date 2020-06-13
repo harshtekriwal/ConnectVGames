@@ -1,0 +1,3 @@
+handling no net error on entering firstname last name
+handling popping of snackbar on dialog box,
+multiple snackbar on sceens

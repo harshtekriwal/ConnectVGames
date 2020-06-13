@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class WelcomeScreen extends StatelessWidget {
+    static const routeName = "/WelcomeScreen";
+
   Future<void> googleSignOut() async {
     await FirebaseAuth.instance.signOut();
     await GoogleSignIn().signOut();

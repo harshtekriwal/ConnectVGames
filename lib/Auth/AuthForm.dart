@@ -1,5 +1,4 @@
-import 'package:ConnectWithGames/Screens/UserInformationScreen.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ConnectWithGames/Screens/PhoneAuthScreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -30,18 +29,9 @@ class _AuthFormState extends State<AuthForm> {
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
-     
-      final user = await Firestore.instance
-          .collection('users')
-          .document(googleUser.email)
-          .get();
-      if (user == null || !user.exists) {
-          Navigator.of(context).pushNamed(UserInformationScreen.routeName,arguments:{'credential':credential,'userMail':googleUser.email});
-            }
-       
-      else {
-        final AuthResult result = await _auth.signInWithCredential(credential);
-      }
+
+       await _auth.signInWithCredential(credential);
+
       setState(() {
         _isLoading = false;
       });
@@ -53,6 +43,7 @@ class _AuthFormState extends State<AuthForm> {
       if (err.message != null) {
         message = err.message;
       }
+      Scaffold.of(context).hideCurrentSnackBar();
       Scaffold.of(context).showSnackBar(SnackBar(
         content: Text(
           message,
@@ -77,6 +68,11 @@ class _AuthFormState extends State<AuthForm> {
         : Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
+              Text(
+                "Join Us",
+                style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 20),
               SignInButton(Buttons.Google, onPressed: () {
                 _submitAuthForm();
               }),
@@ -86,7 +82,10 @@ class _AuthFormState extends State<AuthForm> {
               Container(
                   width: 220,
                   child: FlatButton.icon(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context)
+                          .pushNamed(PhoneAuthScreen.routeName);
+                    },
                     icon: Icon(Icons.phone),
                     label: Text("Sign in with phone"),
                     color: Colors.white,
