@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'Providers/Auth.dart';
+import 'Screens/AddGameScreen.dart';
 import 'Screens/SplashScreen.dart';
 
 void main() {
@@ -27,7 +28,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
           title: 'Flutter Demo',
           theme: ThemeData(
-            primarySwatch: Colors.purple,
+            primarySwatch: Colors.lightBlue,
             accentColor: Colors.deepOrange,
             fontFamily: 'Lato',
           ),
@@ -47,9 +48,11 @@ class MyApp extends StatelessWidget {
                     builder: (context, AsyncSnapshot<DocumentSnapshot> ss) {
                       if (ss.connectionState == ConnectionState.waiting) {
                         return SplashScreen();
-                      }
-                      else if(ss.hasError){
-                        return Scaffold(body:Center(child:Text("Something went wrong! Please try again!")));
+                      } else if (ss.hasError) {
+                        return Scaffold(
+                            body: Center(
+                                child: Text(
+                                    "Something went wrong! Please try again!")));
                       } else {
                         if (ss.data.data != null) {
                           return WelcomeScreen();
@@ -67,6 +70,7 @@ class MyApp extends StatelessWidget {
           routes: {
             PhoneAuthScreen.routeName: (ctx) => PhoneAuthScreen(),
             WelcomeScreen.routeName: (ctx) => WelcomeScreen(),
+            AddGame.routeName: (ctx) => AddGame(),
           }),
     );
   }

@@ -36,6 +36,15 @@ dependencies:
   firebase_auth: ^0.16.1
   google_sign_in: ^4.5.1
   toast: ^0.1.5
+  datetime_picker_formfield: ^1.0.0
+  location: ^3.0.0
+  http: ^0.12.2
+  google_maps_flutter: ^0.5.28+1
+
+
+
+
+
 
 
 
