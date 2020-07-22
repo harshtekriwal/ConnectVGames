@@ -1,4 +1,7 @@
+import 'package:ConnectWithGames/Models/loggedInUserInfo.dart';
 import 'package:ConnectWithGames/Screens/AuthScreen.dart';
+import 'package:ConnectWithGames/Screens/DisplayAvailableGames.dart';
+import 'package:ConnectWithGames/Screens/IndividualChatScreen.dart';
 import 'package:ConnectWithGames/Screens/IntermediateMainScreen.dart';
 import 'package:ConnectWithGames/Screens/PhoneAuthScreen.dart';
 import 'package:ConnectWithGames/Screens/WelcomeScreen.dart';
@@ -55,7 +58,12 @@ class MyApp extends StatelessWidget {
                                     "Something went wrong! Please try again!")));
                       } else {
                         if (ss.data.data != null) {
-                          return WelcomeScreen();
+                          LoggedInUserInfo.id = userSnapshot.data.uid;
+                          LoggedInUserInfo.name = ss.data.data['firstName'];
+                          return WelcomeScreen(
+                            userSnapshot.data.uid,
+                            ss.data.data['firstName'],
+                          );
                         } else {
                           return IntermediateMainScreen(userSnapshot.data.uid);
                         }
@@ -69,8 +77,9 @@ class MyApp extends StatelessWidget {
           initialRoute: '/',
           routes: {
             PhoneAuthScreen.routeName: (ctx) => PhoneAuthScreen(),
-            WelcomeScreen.routeName: (ctx) => WelcomeScreen(),
             AddGame.routeName: (ctx) => AddGame(),
+            DisplayAvailableGames.routeName: (ctx) => DisplayAvailableGames(),
+            IndividualChatScreen.routeName: (ctx) => IndividualChatScreen(),
           }),
     );
   }

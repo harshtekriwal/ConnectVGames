@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:ConnectWithGames/Models/loggedInUserInfo.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +16,7 @@ class IntermediateMainScreen extends StatefulWidget {
 }
 
 class _IntermediateMainScreenState extends State<IntermediateMainScreen> {
-  bool _hasUserDataAlready=false;
+  bool _hasUserDataAlready = false;
   var _isLoading = false;
   static final _formKey = GlobalKey<FormState>();
   var _firstname = ' ';
@@ -24,20 +25,19 @@ class _IntermediateMainScreenState extends State<IntermediateMainScreen> {
       String firstName, String lastName, BuildContext ctx) async {
     try {
       setState(() {
-        _isLoading=true;
+        _isLoading = true;
       });
       await Firestore.instance
           .collection('users')
           .document(widget._uid)
           .setData({'firstName': firstName, 'lastName': lastName});
-          setState(() {
-            _isLoading=false;
-            _hasUserDataAlready=true;
-          });
-     
+      setState(() {
+        _isLoading = false;
+        _hasUserDataAlready = true;
+      });
     } on PlatformException catch (err) {
       setState(() {
-        _isLoading=false;
+        _isLoading = false;
       });
       var message = 'An error occured, please check your credentials!';
       if (err.message != null) {
@@ -51,8 +51,9 @@ class _IntermediateMainScreenState extends State<IntermediateMainScreen> {
         backgroundColor: Theme.of(context).errorColor,
       ));
     } on HttpException catch (err) {
+      print(err);
       setState(() {
-        _isLoading=false;
+        _isLoading = false;
       });
       Scaffold.of(context).showSnackBar(SnackBar(
           content: Text(
@@ -62,7 +63,7 @@ class _IntermediateMainScreenState extends State<IntermediateMainScreen> {
           backgroundColor: Theme.of(context).errorColor));
     } on AuthException catch (err) {
       setState(() {
-        _isLoading=false;
+        _isLoading = false;
       });
       Scaffold.of(context).showSnackBar(SnackBar(
         content: Text(
@@ -73,7 +74,7 @@ class _IntermediateMainScreenState extends State<IntermediateMainScreen> {
       ));
     } catch (error) {
       setState(() {
-        _isLoading=false;
+        _isLoading = false;
       });
       print(error);
     }
@@ -92,71 +93,78 @@ class _IntermediateMainScreenState extends State<IntermediateMainScreen> {
         return;
       }
     }
-    
-    Widget userInfoForm = Scaffold(body:Container(
-        decoration: BoxDecoration(
-            gradient: LinearGradient(
-          colors: [
-            Color.fromRGBO(215, 117, 255, 1).withOpacity(0.5),
-            Color.fromRGBO(255, 188, 117, 1).withOpacity(0.9),
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        )),
-        child: Center(
-          child: Card(
-              margin: EdgeInsets.all(20),
-              child: SingleChildScrollView(
-                  child: Padding(
-                      padding: EdgeInsets.all(16),
-                      child: Form(
-                        key: _formKey,
-                        child: Column(
-                          children: <Widget>[
-                            TextFormField(
-                              decoration:
-                                  InputDecoration(labelText: 'FirstName'),
-                              validator: (value) {
-                                if (value.isEmpty) {
-                                  return 'Please Enter your First Name';
-                                }
-                                return null;
-                              },
-                              onSaved: (value) {
-                                _firstname = value;
-                              },
-                              key: ValueKey('firstName'),
-                            ),
-                            TextFormField(
-                              decoration:
-                                  InputDecoration(labelText: 'LastName'),
-                              validator: (value) {
-                                if (value.isEmpty) {
-                                  return 'Please Enter your Last Name';
-                                }
-                                return null;
-                              },
-                              onSaved: (value) {
-                                _lastname = value;
-                              },
-                              key: ValueKey('lastName'),
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            _isLoading
-                                ? CircularProgressIndicator()
-                                : RaisedButton(
-                                    child: Text('Submit'),
-                                    onPressed: () {
-                                      _trySubmit();
-                                    },
-                                  ),
-                          ],
-                        ),
-                      )))),
-        )));
 
-      return _hasUserDataAlready?WelcomeScreen():userInfoForm;
+    Widget userInfoForm = Scaffold(
+        body: Container(
+            decoration: BoxDecoration(
+                gradient: LinearGradient(
+              colors: [
+                Color.fromRGBO(215, 117, 255, 1).withOpacity(0.5),
+                Color.fromRGBO(255, 188, 117, 1).withOpacity(0.9),
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            )),
+            child: Center(
+              child: Card(
+                  margin: EdgeInsets.all(20),
+                  child: SingleChildScrollView(
+                      child: Padding(
+                          padding: EdgeInsets.all(16),
+                          child: Form(
+                            key: _formKey,
+                            child: Column(
+                              children: <Widget>[
+                                TextFormField(
+                                  decoration:
+                                      InputDecoration(labelText: 'FirstName'),
+                                  validator: (value) {
+                                    if (value.isEmpty) {
+                                      return 'Please Enter your First Name';
+                                    }
+                                    return null;
+                                  },
+                                  onSaved: (value) {
+                                    _firstname = value;
+                                  },
+                                  key: ValueKey('firstName'),
+                                ),
+                                TextFormField(
+                                  decoration:
+                                      InputDecoration(labelText: 'LastName'),
+                                  validator: (value) {
+                                    if (value.isEmpty) {
+                                      return 'Please Enter your Last Name';
+                                    }
+                                    return null;
+                                  },
+                                  onSaved: (value) {
+                                    _lastname = value;
+                                  },
+                                  key: ValueKey('lastName'),
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                _isLoading
+                                    ? CircularProgressIndicator()
+                                    : RaisedButton(
+                                        child: Text('Submit'),
+                                        onPressed: () {
+                                          _trySubmit();
+                                        },
+                                      ),
+                              ],
+                            ),
+                          )))),
+            )));
+
+    if (_hasUserDataAlready) {
+      LoggedInUserInfo.id = widget._uid;
+      LoggedInUserInfo.name = _firstname;
+      return WelcomeScreen(widget._uid, _firstname);
+    } else {
+      return userInfoForm;
+    }
   }
 }

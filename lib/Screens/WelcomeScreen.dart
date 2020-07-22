@@ -1,15 +1,22 @@
+import 'package:ConnectWithGames/Models/loggedInUserInfo.dart';
 import 'package:ConnectWithGames/Screens/AddGameScreen.dart';
+import 'package:ConnectWithGames/Screens/DisplayAvailableGames.dart';
 import 'package:ConnectWithGames/Widgets/app_drawer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class WelcomeScreen extends StatelessWidget {
+  final userId;
+  final name;
+  WelcomeScreen(this.userId, this.name);
   static const routeName = "/WelcomeScreen";
 
   Future<void> googleSignOut() async {
     await FirebaseAuth.instance.signOut();
     await GoogleSignIn().signOut();
+    LoggedInUserInfo.id = null;
+    LoggedInUserInfo.name = null;
   }
 
   @override
@@ -53,7 +60,7 @@ class WelcomeScreen extends StatelessWidget {
             Container(
               margin: EdgeInsets.symmetric(vertical: 50, horizontal: 20),
               child: Text(
-                'Looking for a buddy to play along with?',
+                'Hey $name looking for a buddy to play along with?',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.black,
@@ -71,7 +78,9 @@ class WelcomeScreen extends StatelessWidget {
                 borderSide: BorderSide(color: Colors.blue),
                 shape: new RoundedRectangleBorder(
                     borderRadius: new BorderRadius.circular(30.0)),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushNamed(context, DisplayAvailableGames.routeName);
+                },
               ),
             ),
             Container(

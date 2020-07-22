@@ -1,4 +1,5 @@
 import 'package:ConnectWithGames/Helpers/location_helper.dart';
+import 'package:ConnectWithGames/Models/loggedInUserInfo.dart';
 import 'package:ConnectWithGames/Screens/map_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
@@ -54,13 +55,26 @@ class _AddGameState extends State<AddGame> {
       return;
     }
     _formkey.currentState.save();
+
     try {
-      final user = await FirebaseAuth.instance.currentUser();
-      //final userData= await Firestore.instance.collection('users').document(user.uid).get();
-      await Firestore.instance.collection('Game').add({
+      int totalGamesRequests = 0;
+      await Firestore.instance
+          .collection('Games')
+          .where('userId', isEqualTo: LoggedInUserInfo.id)
+          .getDocuments()
+          .then((value) {
+        totalGamesRequests = value.documents.length;
+      });
+      print(totalGamesRequests);
+      if (totalGamesRequests >= 2) {
+        print("Cant add data");
+        throw Exception();
+      }
+      await Firestore.instance.collection('Games').add({
         'gameName': gameName,
         'gameType': selectedRadioTile == 1 ? 'Physical' : 'Computer',
-        'userId': user.uid,
+        'userId': LoggedInUserInfo.id,
+        'userName': LoggedInUserInfo.name,
         'latitude': lat,
         'longitude': lng,
         'distanceRange': maxDistanceRadius,

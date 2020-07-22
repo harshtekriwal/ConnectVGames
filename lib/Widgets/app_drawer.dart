@@ -1,3 +1,5 @@
+import 'package:ConnectWithGames/Models/loggedInUserInfo.dart';
+import 'package:ConnectWithGames/Screens/ChatScreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -6,6 +8,8 @@ class AppDrawer extends StatelessWidget {
   Future<void> googleSignOut() async {
     await FirebaseAuth.instance.signOut();
     await GoogleSignIn().signOut();
+    LoggedInUserInfo.id = null;
+    LoggedInUserInfo.name = null;
   }
 
   @override
@@ -15,7 +19,7 @@ class AppDrawer extends StatelessWidget {
       children: <Widget>[
         AppBar(
           backgroundColor: Colors.lightBlueAccent,
-          title: Text('Hello Friend'),
+          title: Text('Hello ${LoggedInUserInfo.name}'),
           automaticallyImplyLeading: false,
         ),
         Divider(),
@@ -34,7 +38,10 @@ class AppDrawer extends StatelessWidget {
         ListTile(
           leading: Icon(Icons.chat),
           title: Text("Connections"),
-          onTap: () {},
+          onTap: () {
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (ctx) => ChatScreen()));
+          },
         ),
         Divider(),
         ListTile(
