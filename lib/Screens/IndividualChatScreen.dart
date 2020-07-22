@@ -1,5 +1,5 @@
-import 'package:ConnectWithGames/Widgets/Messages.dart';
-import 'package:ConnectWithGames/Widgets/NewMessage.dart';
+import 'package:ConnectWithGames/Widgets/Chat/Messages.dart';
+import 'package:ConnectWithGames/Widgets/Chat/NewMessage.dart';
 import 'package:flutter/material.dart';
 
 class IndividualChatScreen extends StatelessWidget {

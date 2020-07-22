@@ -1,5 +1,5 @@
 import 'package:ConnectWithGames/Models/loggedInUserInfo.dart';
-import 'package:ConnectWithGames/Widgets/message_bubble.dart';
+import 'package:ConnectWithGames/Widgets/Chat/message_bubble.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 

@@ -30,11 +30,7 @@ class _AuthFormState extends State<AuthForm> {
         idToken: googleAuth.idToken,
       );
 
-       await _auth.signInWithCredential(credential);
-
-      setState(() {
-        _isLoading = false;
-      });
+      await _auth.signInWithCredential(credential);
     } on PlatformException catch (err) {
       setState(() {
         _isLoading = false;

@@ -1,5 +1,5 @@
 import 'package:ConnectWithGames/Models/loggedInUserInfo.dart';
-import 'package:ConnectWithGames/Widgets/chatItem.dart';
+import 'package:ConnectWithGames/Widgets/Chat/chatItem.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 

@@ -70,6 +70,13 @@ class _AddGameState extends State<AddGame> {
         print("Cant add data");
         throw Exception();
       }
+      List<String> splitList = gameName.split(" ");
+      List<String> indexList = [];
+      for (int i = 0; i < splitList.length; i++) {
+        for (int j = 1; j <= splitList[i].length; j++) {
+          indexList.add(splitList[i].substring(0, j).toLowerCase());
+        }
+      }
       await Firestore.instance.collection('Games').add({
         'gameName': gameName,
         'gameType': selectedRadioTile == 1 ? 'Physical' : 'Computer',
@@ -80,6 +87,7 @@ class _AddGameState extends State<AddGame> {
         'distanceRange': maxDistanceRadius,
         'startTime': startDate,
         'endTime': endDate,
+        'searchindex': indexList
       });
       setState(() {
         _isLoading = false;
