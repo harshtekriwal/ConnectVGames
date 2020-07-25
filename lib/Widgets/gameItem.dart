@@ -3,6 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:great_circle_distance/great_circle_distance.dart';
+import 'package:intl/intl.dart';
 
 class GameItem extends StatelessWidget {
   final String userName;
@@ -11,13 +13,19 @@ class GameItem extends StatelessWidget {
   final Timestamp startTime;
   final Timestamp endTime;
   final String gameType;
+  final double lat;
+  final double lng;
+  final double distance;
   GameItem(
       {this.userId,
       this.userName,
       this.gameName,
       this.startTime,
       this.endTime,
-      this.gameType});
+      this.gameType,
+      this.lat,
+      this.lng,
+      this.distance});
   Future<void> connectUsers() async {
     String append = userId.compareTo(LoggedInUserInfo.id) > 0
         ? userId + LoggedInUserInfo.id
@@ -47,6 +55,56 @@ class GameItem extends StatelessWidget {
         width: 0,
       );
     }
+    if (DateTime.parse(LoggedInUserInfo.userFilters.startDate)
+        .isAfter(endTime.toDate())) {
+      return Container(
+        height: 0,
+        width: 0,
+      );
+    }
+    if (DateTime.parse(LoggedInUserInfo.userFilters.endDate)
+        .isBefore(startTime.toDate())) {
+      return Container(
+        height: 0,
+        width: 0,
+      );
+    }
+    if (gameType == 'Physical' &&
+        LoggedInUserInfo.userFilters.isPhysical == false) {
+      return Container(
+        height: 0,
+        width: 0,
+      );
+    }
+    if (gameType == 'Computer' &&
+        LoggedInUserInfo.userFilters.isComputer == false) {
+      return Container(
+        height: 0,
+        width: 0,
+      );
+    }
+    if (gameType == 'Physical') {
+      print('$lat wow $lng');
+      print(
+          '${LoggedInUserInfo.userFilters.lat}wuw ${LoggedInUserInfo.userFilters.lng}');
+
+      var distanceBetweenPlaces = GreatCircleDistance.fromDegrees(
+          latitude1: lat,
+          latitude2: LoggedInUserInfo.userFilters.lat,
+          longitude1: lng,
+          longitude2: LoggedInUserInfo.userFilters.lng);
+      double maxDistance = distanceBetweenPlaces.vincentyDistance() / 1000;
+      print(maxDistance);
+      print(LoggedInUserInfo.userFilters.distance);
+      if (maxDistance > distance ||
+          maxDistance > LoggedInUserInfo.userFilters.distance) {
+        return Container(
+          height: 0,
+          width: 0,
+        );
+      }
+    }
+
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       child: InkWell(
@@ -65,11 +123,13 @@ class GameItem extends StatelessWidget {
                   SizedBox(
                     height: 10,
                   ),
-                  Text('Start Time ${startTime.toDate().toIso8601String()}'),
+                  Text(
+                      'Start Time : ${DateFormat.yMMMd().format(startTime.toDate())}'),
                   SizedBox(
                     width: 10,
                   ),
-                  Text('End Time ${endTime.toDate().toIso8601String()}'),
+                  Text(
+                      'End Time : ${DateFormat.yMMMd().format(endTime.toDate())}'),
                   ListTile(
                     leading: Text(
                       'Game Type : ${this.gameType}',

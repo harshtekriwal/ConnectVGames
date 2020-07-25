@@ -23,9 +23,10 @@ class _AddGameState extends State<AddGame> {
   int selectedRadioTile = 1;
   double lat;
   double lng;
-  int maxDistanceRadius;
+  double maxDistanceRadius;
   DateTime startDate;
   DateTime endDate;
+
   static final _formkey = GlobalKey<FormState>();
   final format = DateFormat("yyyy-MM-dd HH:mm");
   String address;
@@ -111,28 +112,43 @@ class _AddGameState extends State<AddGame> {
   }
 
   Future<void> _getCurrentUserLocation() async {
-    final locData = await Location().getLocation();
-    lat = locData.latitude;
-    lng = locData.longitude;
-    final address = await LocationHelper.getPlaceAddress(
-        locData.latitude, locData.longitude);
-    _updateAddress(address);
-    _controller.text = address;
+    try {
+      final locData = await Location().getLocation();
+      lat = locData.latitude;
+      lng = locData.longitude;
+      final address = await LocationHelper.getPlaceAddress(
+          locData.latitude, locData.longitude);
+      _updateAddress(address);
+      _controller.text = address;
+    } on PlatformException catch (err) {
+      print(err);
+    } catch (err) {
+      print(err);
+    }
   }
 
   Future<void> _selectOnMap() async {
-    final locData = await Location().getLocation();
-    final selectedLocation = await Navigator.of(context).push(MaterialPageRoute(
-        builder: (ctx) => MapScreen(locData.latitude, locData.longitude)));
-    if (selectedLocation == null) {
-      return;
-    } else {
-      lat = selectedLocation[0];
-      lng = selectedLocation[1];
-      final address = await LocationHelper.getPlaceAddress(
-          selectedLocation[0], selectedLocation[1]);
-      _updateAddress(address);
-      _controller.text = address;
+    try {
+      final locData = await Location().getLocation();
+
+      final selectedLocation = await Navigator.of(context).push(
+          MaterialPageRoute(
+              builder: (ctx) =>
+                  MapScreen(locData.latitude, locData.longitude)));
+      if (selectedLocation == null) {
+        return;
+      } else {
+        lat = selectedLocation[0];
+        lng = selectedLocation[1];
+        final address = await LocationHelper.getPlaceAddress(
+            selectedLocation[0], selectedLocation[1]);
+        _updateAddress(address);
+        _controller.text = address;
+      }
+    } on PlatformException catch (err) {
+      print(err);
+    } catch (err) {
+      print(err);
     }
   }
 
@@ -235,13 +251,14 @@ class _AddGameState extends State<AddGame> {
                               if (value.length <= 0) {
                                 return "Please enter a distance";
                               }
-                              if (int.parse(value) < 0) {
+                              if (double.parse(value) < 0 ||
+                                  double.parse(value) > 12756) {
                                 return "Please enter a valid distance";
                               }
                               return null;
                             },
                             onSaved: (val) {
-                              maxDistanceRadius = int.parse(val);
+                              maxDistanceRadius = double.parse(val);
                             },
                             decoration: InputDecoration(
                                 labelText: "Maximum Distance in KM"),

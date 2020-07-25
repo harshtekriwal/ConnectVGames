@@ -40,6 +40,12 @@ dependencies:
   location: ^3.0.0
   http: ^0.12.2
   google_maps_flutter: ^0.5.28+1
+  shared_preferences: ^0.5.8
+  great_circle_distance: ^1.0.1
+  geolocator: '^2.1.0'
+
+
+
 
 
 

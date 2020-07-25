@@ -11,6 +11,8 @@ class MapScreen extends StatefulWidget {
 
 class _MapScreenState extends State<MapScreen> {
   LatLng _pickedLocation;
+  String searchAddress;
+  GoogleMapController mapController;
 
   void _selectPlace(LatLng position) {
     setState(() {
@@ -40,15 +42,39 @@ class _MapScreenState extends State<MapScreen> {
             )
           ],
         ),
-        body: GoogleMap(
-          initialCameraPosition: CameraPosition(
-            target: LatLng(widget.lat, widget.lng),
-            zoom: 16,
-          ),
-          onTap: _selectPlace,
-          markers: _pickedLocation == null
-              ? null
-              : {Marker(markerId: MarkerId('m1'), position: _pickedLocation)},
+        body: Column(
+          children: <Widget>[
+            TextField(
+              decoration: InputDecoration(
+                  hintText: 'Enter Address',
+                  contentPadding: EdgeInsets.only(left: 15, top: 15),
+                  suffixIcon: IconButton(
+                    icon: Icon(Icons.search),
+                    onPressed: () {},
+                  )),
+              onChanged: (val) {
+                setState(() {
+                  searchAddress = val;
+                });
+              },
+            ),
+            Container(
+              height: 250,
+              child: GoogleMap(
+                initialCameraPosition: CameraPosition(
+                  target: LatLng(widget.lat, widget.lng),
+                  zoom: 16,
+                ),
+                onTap: _selectPlace,
+                markers: _pickedLocation == null
+                    ? null
+                    : {
+                        Marker(
+                            markerId: MarkerId('m1'), position: _pickedLocation)
+                      },
+              ),
+            ),
+          ],
         ));
   }
 }

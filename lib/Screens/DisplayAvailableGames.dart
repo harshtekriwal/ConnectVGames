@@ -1,4 +1,5 @@
 import 'package:ConnectWithGames/Models/loggedInUserInfo.dart';
+import 'package:ConnectWithGames/Screens/SearchFiltersScreen.dart';
 import 'package:ConnectWithGames/Widgets/gameItem.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -19,17 +20,40 @@ class _DisplayAvailableGamesState extends State<DisplayAvailableGames> {
     return Scaffold(
         appBar: AppBar(
           title: Text('Available Games'),
+          actions: <Widget>[
+            IconButton(
+                icon: Icon(Icons.settings),
+                onPressed: () async {
+                  final result = await Navigator.of(context).push(
+                      MaterialPageRoute(
+                          builder: (ctx) => SearchFiltersScreen()));
+                  if (result == null) {
+                  } else {
+                    setState(() {});
+                  }
+                })
+          ],
         ),
         body: Column(
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.all(8),
-              child: TextField(
-                onChanged: (value) {
-                  setState(() {
-                    searchString = value.toLowerCase();
-                  });
-                },
+              child: Row(
+                children: <Widget>[
+                  SizedBox(
+                    width: 30,
+                  ),
+                  Expanded(
+                    child: TextField(
+                      onChanged: (value) {
+                        setState(() {
+                          searchString = value.toLowerCase();
+                        });
+                      },
+                    ),
+                  ),
+                  IconButton(icon: Icon(Icons.search), onPressed: () {}),
+                ],
               ),
             ),
             Expanded(
@@ -62,7 +86,10 @@ class _DisplayAvailableGamesState extends State<DisplayAvailableGames> {
                             gameName: gameDocs[index]['gameName'],
                             gameType: gameDocs[index]['gameType'],
                             startTime: gameDocs[index]['startTime'],
-                            endTime: gameDocs[index]['endTime']);
+                            endTime: gameDocs[index]['endTime'],
+                            lat: gameDocs[index]['latitude'],
+                            lng: gameDocs[index]['longitude'],
+                            distance: gameDocs[index]['distanceRange']);
                       });
                 },
               ),

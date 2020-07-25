@@ -15,43 +15,42 @@ class AppDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-        child: Column(
-      children: <Widget>[
-        AppBar(
-          backgroundColor: Colors.lightBlueAccent,
-          title: Text('Hello ${LoggedInUserInfo.name}'),
-          automaticallyImplyLeading: false,
-        ),
-        Divider(),
-        ListTile(
-          leading: Icon(Icons.home),
-          title: Text("Home"),
-          onTap: () {},
-        ),
-        Divider(),
-        ListTile(
-          leading: Icon(Icons.gamepad),
-          title: Text("About App"),
-          onTap: () {},
-        ),
-        Divider(),
-        ListTile(
-          leading: Icon(Icons.chat),
-          title: Text("Connections"),
-          onTap: () {
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (ctx) => ChatScreen()));
-          },
-        ),
-        Divider(),
-        ListTile(
-          leading: Icon(Icons.exit_to_app),
-          title: Text("Logout"),
-          onTap: () {
-            googleSignOut();
-          },
-        )
-      ],
+        child: SingleChildScrollView(
+      child: Column(
+        children: <Widget>[
+          AppBar(
+            backgroundColor: Colors.lightBlueAccent,
+            title: Text('Hello ${LoggedInUserInfo.name}'),
+            automaticallyImplyLeading: false,
+          ),
+          Divider(),
+          ListTile(
+            leading: Icon(Icons.home),
+            title: Text("Home"),
+            onTap: () {},
+          ),
+          ListTile(
+            leading: Icon(Icons.gamepad),
+            title: Text("About App"),
+            onTap: () {},
+          ),
+          ListTile(
+            leading: Icon(Icons.chat),
+            title: Text("Connections"),
+            onTap: () {
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (ctx) => ChatScreen()));
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.exit_to_app),
+            title: Text("Logout"),
+            onTap: () {
+              googleSignOut();
+            },
+          )
+        ],
+      ),
     ));
   }
 }
