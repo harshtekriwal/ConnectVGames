@@ -162,7 +162,7 @@ class _IntermediateMainScreenState extends State<IntermediateMainScreen> {
     if (_hasUserDataAlready) {
       LoggedInUserInfo.id = widget._uid;
       LoggedInUserInfo.name = _firstname;
-      return WelcomeScreen(widget._uid, _firstname);
+      return WelcomeScreen();
     } else {
       return userInfoForm;
     }

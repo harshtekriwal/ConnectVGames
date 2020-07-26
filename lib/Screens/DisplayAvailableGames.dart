@@ -85,8 +85,7 @@ class _DisplayAvailableGamesState extends State<DisplayAvailableGames> {
                             userName: gameDocs[index]['userName'],
                             gameName: gameDocs[index]['gameName'],
                             gameType: gameDocs[index]['gameType'],
-                            startTime: gameDocs[index]['startTime'],
-                            endTime: gameDocs[index]['endTime'],
+                            gameTime: gameDocs[index]['playDate'],
                             lat: gameDocs[index]['latitude'],
                             lng: gameDocs[index]['longitude'],
                             distance: gameDocs[index]['distanceRange']);

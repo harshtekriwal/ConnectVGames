@@ -3,8 +3,7 @@ class Filters {
   bool isComputer;
   double lat;
   double lng;
-  String startDate;
-  String endDate;
+  String gameDate;
   double distance;
   String address;
   Filters.fromJson(Map<String, dynamic> json)
@@ -13,8 +12,7 @@ class Filters {
         lat = json['lat'],
         lng = json['lng'],
         distance = json['distance'],
-        startDate = json['startDate'],
-        endDate = json['endDate'],
+        gameDate = json['gameDate'],
         address = json['address'];
   Filters(
       {this.isPhysical,
@@ -22,8 +20,7 @@ class Filters {
       this.lat,
       this.lng,
       this.distance,
-      this.startDate,
-      this.endDate,
+      this.gameDate,
       this.address});
   Map<String, dynamic> toJson() => {
         'isPhysical': isPhysical,
@@ -31,8 +28,7 @@ class Filters {
         'lat': lat,
         'lng': lng,
         'distance': distance,
-        'startDate': startDate,
-        'endDate': endDate,
+        'gameDate': gameDate,
         'address': address,
       };
 }

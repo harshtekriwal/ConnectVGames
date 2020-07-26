@@ -10,8 +10,7 @@ class GameItem extends StatelessWidget {
   final String userName;
   final String userId;
   final String gameName;
-  final Timestamp startTime;
-  final Timestamp endTime;
+  final Timestamp gameTime;
   final String gameType;
   final double lat;
   final double lng;
@@ -20,8 +19,7 @@ class GameItem extends StatelessWidget {
       {this.userId,
       this.userName,
       this.gameName,
-      this.startTime,
-      this.endTime,
+      this.gameTime,
       this.gameType,
       this.lat,
       this.lng,
@@ -49,21 +47,7 @@ class GameItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (endTime.toDate().isBefore(DateTime.now())) {
-      return Container(
-        height: 0,
-        width: 0,
-      );
-    }
-    if (DateTime.parse(LoggedInUserInfo.userFilters.startDate)
-        .isAfter(endTime.toDate())) {
-      return Container(
-        height: 0,
-        width: 0,
-      );
-    }
-    if (DateTime.parse(LoggedInUserInfo.userFilters.endDate)
-        .isBefore(startTime.toDate())) {
+    if (gameTime.toDate().isBefore(DateTime.now())) {
       return Container(
         height: 0,
         width: 0,
@@ -84,10 +68,7 @@ class GameItem extends StatelessWidget {
       );
     }
     if (gameType == 'Physical') {
-      print('$lat wow $lng');
-      print(
-          '${LoggedInUserInfo.userFilters.lat}wuw ${LoggedInUserInfo.userFilters.lng}');
-
+      print("wow");
       var distanceBetweenPlaces = GreatCircleDistance.fromDegrees(
           latitude1: lat,
           latitude2: LoggedInUserInfo.userFilters.lat,
@@ -104,7 +85,20 @@ class GameItem extends StatelessWidget {
         );
       }
     }
-
+    if (LoggedInUserInfo.userFilters.gameDate != null) {
+      DateTime date1 = gameTime.toDate();
+      DateTime date2 = DateTime.parse(LoggedInUserInfo.userFilters.gameDate);
+      print(date1);
+      print(date2);
+      if (date1.year != date2.year ||
+          date1.month != date2.month ||
+          date1.day != date2.day) {
+        return Container(
+          height: 0,
+          width: 0,
+        );
+      }
+    }
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       child: InkWell(
@@ -120,16 +114,8 @@ class GameItem extends StatelessWidget {
                     this.gameName,
                     style: TextStyle(fontSize: 25),
                   ),
-                  SizedBox(
-                    height: 10,
-                  ),
                   Text(
-                      'Start Time : ${DateFormat.yMMMd().format(startTime.toDate())}'),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Text(
-                      'End Time : ${DateFormat.yMMMd().format(endTime.toDate())}'),
+                      'Game Date : ${DateFormat.yMMMd().format(gameTime.toDate())}'),
                   ListTile(
                     leading: Text(
                       'Game Type : ${this.gameType}',

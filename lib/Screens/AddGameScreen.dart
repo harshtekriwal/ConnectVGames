@@ -24,8 +24,7 @@ class _AddGameState extends State<AddGame> {
   double lat;
   double lng;
   double maxDistanceRadius;
-  DateTime startDate;
-  DateTime endDate;
+  DateTime playingTime;
 
   static final _formkey = GlobalKey<FormState>();
   final format = DateFormat("yyyy-MM-dd HH:mm");
@@ -86,8 +85,7 @@ class _AddGameState extends State<AddGame> {
         'latitude': lat,
         'longitude': lng,
         'distanceRange': maxDistanceRadius,
-        'startTime': startDate,
-        'endTime': endDate,
+        'playDate': playingTime,
         'searchindex': indexList
       });
       setState(() {
@@ -130,11 +128,14 @@ class _AddGameState extends State<AddGame> {
   Future<void> _selectOnMap() async {
     try {
       final locData = await Location().getLocation();
-
+      final lt = locData.latitude;
+      final lg = locData.longitude;
+      final address = await LocationHelper.getPlaceAddress(
+          lat == null ? lt : lat, lng == null ? lg : lng);
       final selectedLocation = await Navigator.of(context).push(
           MaterialPageRoute(
-              builder: (ctx) =>
-                  MapScreen(locData.latitude, locData.longitude)));
+              builder: (ctx) => MapScreen(
+                  lat == null ? lt : lat, lng == null ? lg : lng, address)));
       if (selectedLocation == null) {
         return;
       } else {
@@ -236,7 +237,7 @@ class _AddGameState extends State<AddGame> {
                             readOnly: true,
                             controller: _controller,
                             decoration: InputDecoration(
-                              labelText: 'Enter Location',
+                              labelText: 'Place where you want to Play',
                               errorText: address == ''
                                   ? 'Please enter a location'
                                   : null,
@@ -261,7 +262,8 @@ class _AddGameState extends State<AddGame> {
                               maxDistanceRadius = double.parse(val);
                             },
                             decoration: InputDecoration(
-                                labelText: "Maximum Distance in KM"),
+                                labelText:
+                                    "Look for People within Distance (KM)"),
                           )
                         ],
                       ),
@@ -272,18 +274,18 @@ class _AddGameState extends State<AddGame> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(
-                            'StartTime (${format.pattern})',
+                            'Playing Date & Time (${format.pattern})',
                           ),
                           DateTimeField(
                             validator: (value) {
                               if (value == null) {
                                 return 'Please enter a date';
                               }
-                              startDate = value;
+                              playingTime = value;
                               return null;
                             },
                             onSaved: (value) {
-                              startDate = value;
+                              playingTime = value;
                             },
                             format: format,
                             onShowPicker: (context, currentValue) async {
@@ -304,46 +306,6 @@ class _AddGameState extends State<AddGame> {
                               }
                             },
                           ),
-                          SizedBox(height: 20),
-                          Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Text('End Time (${format.pattern})'),
-                                DateTimeField(
-                                  validator: (value) {
-                                    if (value == null) {
-                                      return 'Please enter a date';
-                                    } else if (startDate != null &&
-                                        value.isBefore(startDate)) {
-                                      return 'End Date must be after start Date';
-                                    } else
-                                      return null;
-                                  },
-                                  onSaved: (value) {
-                                    endDate = value;
-                                  },
-                                  format: format,
-                                  onShowPicker: (context, currentValue) async {
-                                    final date = await showDatePicker(
-                                        context: context,
-                                        firstDate: DateTime.now(),
-                                        initialDate:
-                                            currentValue ?? DateTime.now(),
-                                        lastDate: DateTime(2100));
-                                    if (date != null) {
-                                      final time = await showTimePicker(
-                                        context: context,
-                                        initialTime: TimeOfDay.fromDateTime(
-                                            currentValue ?? DateTime.now()),
-                                      );
-
-                                      return DateTimeField.combine(date, time);
-                                    } else {
-                                      return currentValue;
-                                    }
-                                  },
-                                ),
-                              ])
                         ]),
                     SizedBox(
                       height: 20,

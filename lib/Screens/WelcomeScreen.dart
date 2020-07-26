@@ -4,18 +4,13 @@ import 'package:ConnectWithGames/Models/loggedInUserInfo.dart';
 import 'package:ConnectWithGames/Screens/AddGameScreen.dart';
 import 'package:ConnectWithGames/Screens/DisplayAvailableGames.dart';
 import 'package:ConnectWithGames/Widgets/app_drawer.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:location/location.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
 class WelcomeScreen extends StatefulWidget {
-  final userId;
-  final name;
-  WelcomeScreen(this.userId, this.name);
   static const routeName = "/WelcomeScreen";
 
   @override
@@ -24,12 +19,6 @@ class WelcomeScreen extends StatefulWidget {
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
   bool _isLoading = false;
-  Future<void> googleSignOut() async {
-    await FirebaseAuth.instance.signOut();
-    await GoogleSignIn().signOut();
-    LoggedInUserInfo.id = null;
-    LoggedInUserInfo.name = null;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,42 +26,16 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         backgroundColor: Colors.white,
         drawer: AppDrawer(),
         appBar: AppBar(
-            title: Text("ConnectVGames"),
-            backgroundColor: Colors.lightBlueAccent,
-            actions: <Widget>[
-              DropdownButton(
-                underline: Container(),
-                icon: Icon(Icons.more_vert,
-                    color: Theme.of(context).primaryIconTheme.color),
-                items: [
-                  DropdownMenuItem(
-                    child: Container(
-                        child: Row(
-                      children: <Widget>[
-                        Icon(Icons.exit_to_app),
-                        SizedBox(
-                          width: 8,
-                        ),
-                        Text('Logout'),
-                      ],
-                    )),
-                    value: 'logout',
-                  ),
-                ],
-                onChanged: (itemIdentifier) {
-                  if (itemIdentifier == 'logout') {
-                    googleSignOut();
-                  }
-                },
-              )
-            ]),
+          title: Text("ConnectVGames"),
+          backgroundColor: Colors.lightBlueAccent,
+        ),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Container(
               margin: EdgeInsets.symmetric(vertical: 50, horizontal: 20),
               child: Text(
-                'Hey ${widget.name} looking for a buddy to play along with?',
+                'Hey ${LoggedInUserInfo.name} looking for a buddy to play along with?',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.black,
@@ -106,15 +69,31 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                           Map<String, dynamic> result = jsonDecode(
                               prefs.getString(
                                   'defaultValues/${LoggedInUserInfo.id}'));
-                          LoggedInUserInfo.userFilters = Filters(
-                              distance: result['distance'],
-                              endDate: result['endDate'],
-                              startDate: result['startDate'],
-                              lat: result['lat'],
-                              lng: result['lng'],
-                              isComputer: result['isComputer'],
-                              isPhysical: result['isPhysical'],
-                              address: result['address']);
+                          if (result['gameDate'] != null &&
+                              DateTime.parse(result['gameDate'])
+                                  .isBefore(DateTime.now())) {
+                            LoggedInUserInfo.userFilters = Filters(
+                                distance: result['distance'],
+                                lat: result['lat'],
+                                lng: result['lng'],
+                                isComputer: result['isComputer'],
+                                isPhysical: result['isPhysical'],
+                                gameDate: null,
+                                address: result['address']);
+                            String value =
+                                jsonEncode(LoggedInUserInfo.userFilters);
+
+                            prefs.setString('defaultValues', value);
+                          } else {
+                            LoggedInUserInfo.userFilters = Filters(
+                                distance: result['distance'],
+                                lat: result['lat'],
+                                lng: result['lng'],
+                                isComputer: result['isComputer'],
+                                isPhysical: result['isPhysical'],
+                                gameDate: result['gameDate'],
+                                address: result['address']);
+                          }
                           Navigator.pushNamed(
                               context, DisplayAvailableGames.routeName);
                         } else {
@@ -127,24 +106,22 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                             Filters filters = Filters(
                                 lat: lat,
                                 lng: lng,
-                                distance: 12756,
+                                distance: 2,
                                 isComputer: true,
                                 isPhysical: true,
-                                startDate: DateTime.now().toIso8601String(),
-                                endDate: DateTime(2100).toIso8601String(),
+                                gameDate: null,
                                 address: address);
                             String value = jsonEncode(filters);
                             SharedPreferences prefs =
                                 await SharedPreferences.getInstance();
                             prefs.setString('defaultValues', value);
                             LoggedInUserInfo.userFilters = Filters(
-                                distance: 12756,
+                                distance: 2,
                                 lat: lat,
                                 lng: lng,
                                 isComputer: true,
                                 isPhysical: true,
-                                startDate: DateTime.now().toIso8601String(),
-                                endDate: DateTime(2100).toIso8601String(),
+                                gameDate: null,
                                 address: address);
                             setState(() {
                               _isLoading = false;

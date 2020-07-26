@@ -60,10 +60,7 @@ class MyApp extends StatelessWidget {
                         if (ss.data.data != null) {
                           LoggedInUserInfo.id = userSnapshot.data.uid;
                           LoggedInUserInfo.name = ss.data.data['firstName'];
-                          return WelcomeScreen(
-                            userSnapshot.data.uid,
-                            ss.data.data['firstName'],
-                          );
+                          return WelcomeScreen();
                         } else {
                           return IntermediateMainScreen(userSnapshot.data.uid);
                         }
@@ -76,6 +73,7 @@ class MyApp extends StatelessWidget {
           ),
           initialRoute: '/',
           routes: {
+            WelcomeScreen.routeName: (ctx) => WelcomeScreen(),
             PhoneAuthScreen.routeName: (ctx) => PhoneAuthScreen(),
             AddGame.routeName: (ctx) => AddGame(),
             DisplayAvailableGames.routeName: (ctx) => DisplayAvailableGames(),

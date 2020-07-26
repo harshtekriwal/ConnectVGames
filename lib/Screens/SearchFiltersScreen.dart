@@ -19,9 +19,9 @@ class SearchFiltersScreen extends StatefulWidget {
 class _SearchFiltersScreenState extends State<SearchFiltersScreen> {
   var _isPhysical;
   var _isComputer;
-  DateTime startDate;
-  DateTime endDate;
-  final format = DateFormat("yyyy-MM-dd HH:mm");
+  var _hasDefaultDate;
+  DateTime gameDate;
+  final format = DateFormat("yyyy-MM-dd");
   double maxDistanceRadius;
   double lat;
   double lng;
@@ -34,13 +34,16 @@ class _SearchFiltersScreenState extends State<SearchFiltersScreen> {
   void initState() {
     _isPhysical = LoggedInUserInfo.userFilters.isPhysical;
     _isComputer = LoggedInUserInfo.userFilters.isComputer;
-    startDate = DateTime.parse(LoggedInUserInfo.userFilters.startDate);
-    endDate = DateTime.parse(LoggedInUserInfo.userFilters.endDate);
+    gameDate = LoggedInUserInfo.userFilters.gameDate == null
+        ? null
+        : DateTime.parse(LoggedInUserInfo.userFilters.gameDate);
     maxDistanceRadius = LoggedInUserInfo.userFilters.distance;
     lat = LoggedInUserInfo.userFilters.lat;
     lng = LoggedInUserInfo.userFilters.lng;
     address = LoggedInUserInfo.userFilters.address;
     newAddress = LoggedInUserInfo.userFilters.address;
+    _hasDefaultDate =
+        LoggedInUserInfo.userFilters.gameDate == null ? false : true;
     _controller.text = address;
     super.initState();
   }
@@ -60,8 +63,8 @@ class _SearchFiltersScreenState extends State<SearchFiltersScreen> {
 
   Future<void> _selectOnMap() async {
     try {
-      final selectedLocation = await Navigator.of(context)
-          .push(MaterialPageRoute(builder: (ctx) => MapScreen(lat, lng)));
+      final selectedLocation = await Navigator.of(context).push(
+          MaterialPageRoute(builder: (ctx) => MapScreen(lat, lng, address)));
       if (selectedLocation == null) {
         return;
       } else {
@@ -100,15 +103,14 @@ class _SearchFiltersScreenState extends State<SearchFiltersScreen> {
         distance: maxDistanceRadius,
         isComputer: _isComputer,
         isPhysical: _isPhysical,
-        startDate: startDate.toIso8601String(),
-        endDate: endDate.toIso8601String(),
+        gameDate: _hasDefaultDate ? gameDate.toIso8601String() : null,
         address: _isPhysical ? newAddress : address);
     String value = jsonEncode(filters);
     prefs.setString('defaultValues/${LoggedInUserInfo.id}', value);
     LoggedInUserInfo.userFilters.isPhysical = _isPhysical;
     LoggedInUserInfo.userFilters.isComputer = _isComputer;
-    LoggedInUserInfo.userFilters.startDate = startDate.toIso8601String();
-    LoggedInUserInfo.userFilters.endDate = endDate.toIso8601String();
+    LoggedInUserInfo.userFilters.gameDate =
+        _hasDefaultDate ? gameDate.toIso8601String() : null;
     LoggedInUserInfo.userFilters.distance = maxDistanceRadius;
     LoggedInUserInfo.userFilters.lat = lat;
     LoggedInUserInfo.userFilters.lng = lng;
@@ -145,80 +147,40 @@ class _SearchFiltersScreenState extends State<SearchFiltersScreen> {
                       _isComputer = val;
                     });
                   }),
-                  Text(
-                    'StartTime (${format.pattern})',
-                    textAlign: TextAlign.center,
-                  ),
-                  DateTimeField(
-                    initialValue: startDate,
-                    validator: (value) {
-                      if (value == null) {
-                        return 'Please enter a date';
-                      }
-                      startDate = value;
-                      return null;
-                    },
-                    onSaved: (value) {
-                      startDate = value;
-                    },
-                    format: format,
-                    onShowPicker: (context, currentValue) async {
-                      final date = await showDatePicker(
-                          context: context,
-                          firstDate: DateTime.now(),
-                          initialDate: currentValue ?? DateTime.now(),
-                          lastDate: DateTime(2100));
-                      if (date != null) {
-                        final time = await showTimePicker(
-                          context: context,
-                          initialTime: TimeOfDay.fromDateTime(
-                              currentValue ?? DateTime.now()),
-                        );
-                        return DateTimeField.combine(date, time);
-                      } else {
-                        return currentValue;
-                      }
-                    },
-                  ),
-                  SizedBox(height: 20),
-                  Text(
-                    'End Time (${format.pattern})',
-                    textAlign: TextAlign.center,
-                  ),
-                  DateTimeField(
-                    initialValue: endDate,
-                    validator: (value) {
-                      if (value == null) {
-                        return 'Please enter a date';
-                      } else if (startDate != null &&
-                          value.isBefore(startDate)) {
-                        return 'End Date must be after start Date';
-                      } else
+                  switchFilterBuilder('Choose a Date', "", _hasDefaultDate,
+                      (val) {
+                    setState(() {
+                      _hasDefaultDate = val;
+                    });
+                  }),
+                  if (_hasDefaultDate)
+                    Text(
+                      'Date(${format.pattern})',
+                      textAlign: TextAlign.center,
+                    ),
+                  if (_hasDefaultDate)
+                    DateTimeField(
+                      initialValue: gameDate,
+                      validator: (value) {
+                        if (value == null) {
+                          return 'Please enter a date';
+                        }
+                        gameDate = value;
                         return null;
-                    },
-                    onSaved: (value) {
-                      endDate = value;
-                    },
-                    format: format,
-                    onShowPicker: (context, currentValue) async {
-                      final date = await showDatePicker(
-                          context: context,
-                          firstDate: DateTime.now(),
-                          initialDate: currentValue ?? DateTime.now(),
-                          lastDate: DateTime(2100));
-                      if (date != null) {
-                        final time = await showTimePicker(
-                          context: context,
-                          initialTime: TimeOfDay.fromDateTime(
-                              currentValue ?? DateTime.now()),
-                        );
-
-                        return DateTimeField.combine(date, time);
-                      } else {
-                        return currentValue;
-                      }
-                    },
-                  ),
+                      },
+                      onSaved: (value) {
+                        gameDate = value;
+                      },
+                      format: format,
+                      onShowPicker: (context, currentValue) async {
+                        final date = await showDatePicker(
+                            context: context,
+                            firstDate: DateTime.now(),
+                            initialDate: currentValue ?? DateTime.now(),
+                            lastDate: DateTime(2100));
+                        return date;
+                      },
+                    ),
                   SizedBox(
                     height: 20,
                   ),

@@ -9,6 +9,7 @@ class ChatScreen extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           title: Text('Connections'),
+          backgroundColor: Colors.lightBlueAccent,
         ),
         body: StreamBuilder(
             stream: Firestore.instance.collection('Chats').snapshots(),
