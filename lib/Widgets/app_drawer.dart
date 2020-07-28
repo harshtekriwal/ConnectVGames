@@ -19,28 +19,24 @@ class AppDrawer extends StatelessWidget {
       child: Column(
         children: <Widget>[
           AppBar(
-            backgroundColor: Colors.lightBlueAccent,
             title: Text('Hello ${LoggedInUserInfo.name}'),
             automaticallyImplyLeading: false,
           ),
           Divider(),
-          ListTile(
-            leading: Icon(Icons.home),
-            title: Text("Home"),
-            onTap: () {},
-          ),
           ListTile(
             leading: Icon(Icons.gamepad),
             title: Text("About App"),
             onTap: () {},
           ),
           ListTile(
-            leading: Icon(Icons.chat),
-            title: Text("Connections"),
-            onTap: () {
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (ctx) => ChatScreen()));
-            },
+            leading: Icon(Icons.edit),
+            title: Text("Edit Profile"),
+            onTap: () {},
+          ),
+          ListTile(
+            leading: Icon(Icons.security),
+            title: Text("Privacy"),
+            onTap: () {},
           ),
           ListTile(
             leading: Icon(Icons.exit_to_app),
@@ -48,7 +44,7 @@ class AppDrawer extends StatelessWidget {
             onTap: () {
               googleSignOut();
             },
-          )
+          ),
         ],
       ),
     ));

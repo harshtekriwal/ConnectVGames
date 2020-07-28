@@ -45,6 +45,9 @@ class _DisplayAvailableGamesState extends State<DisplayAvailableGames> {
                   ),
                   Expanded(
                     child: TextField(
+                      decoration: InputDecoration(
+                        hintText: 'Search',
+                      ),
                       onChanged: (value) {
                         setState(() {
                           searchString = value.toLowerCase();

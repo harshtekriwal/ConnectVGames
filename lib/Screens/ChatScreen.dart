@@ -9,7 +9,6 @@ class ChatScreen extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           title: Text('Connections'),
-          backgroundColor: Colors.lightBlueAccent,
         ),
         body: StreamBuilder(
             stream: Firestore.instance.collection('Chats').snapshots(),
@@ -22,12 +21,16 @@ class ChatScreen extends StatelessWidget {
                   itemCount: chatDocs.length,
                   itemBuilder: (ctx, index) {
                     if (chatDocs[index]['idOne'] == LoggedInUserInfo.id) {
-                      return ChatItem(chatDocs[index]['userNameTwo'],
-                          chatDocs[index]['idTwo']);
+                      return ChatItem(
+                          chatDocs[index]['userNameTwo'],
+                          chatDocs[index]['idTwo'],
+                          chatDocs[index]['imageTwo']);
                     } else if (chatDocs[index]['idTwo'] ==
                         LoggedInUserInfo.id) {
-                      return ChatItem(chatDocs[index]['userNameOne'],
-                          chatDocs[index]['idOne']);
+                      return ChatItem(
+                          chatDocs[index]['userNameOne'],
+                          chatDocs[index]['idOne'],
+                          chatDocs[index]['imageOne']);
                     } else {
                       return Container(
                         height: 0,

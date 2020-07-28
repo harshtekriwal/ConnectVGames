@@ -4,6 +4,7 @@ import 'package:ConnectWithGames/Screens/DisplayAvailableGames.dart';
 import 'package:ConnectWithGames/Screens/IndividualChatScreen.dart';
 import 'package:ConnectWithGames/Screens/IntermediateMainScreen.dart';
 import 'package:ConnectWithGames/Screens/PhoneAuthScreen.dart';
+import 'package:ConnectWithGames/Screens/UserGamesScreen.dart';
 import 'package:ConnectWithGames/Screens/WelcomeScreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -31,8 +32,9 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
           title: 'Flutter Demo',
           theme: ThemeData(
-            primarySwatch: Colors.lightBlue,
-            accentColor: Colors.deepOrange,
+            primarySwatch: Colors.pink,
+            accentColor: Colors.amber,
+            canvasColor: Color.fromRGBO(255, 254, 229, 1),
             fontFamily: 'Lato',
           ),
           home: StreamBuilder(
@@ -43,6 +45,7 @@ class MyApp extends StatelessWidget {
               }
 
               if (userSnapshot.hasData) {
+                print(userSnapshot.data.email);
                 return FutureBuilder(
                     future: Firestore.instance
                         .collection('users')
@@ -60,6 +63,7 @@ class MyApp extends StatelessWidget {
                         if (ss.data.data != null) {
                           LoggedInUserInfo.id = userSnapshot.data.uid;
                           LoggedInUserInfo.name = ss.data.data['firstName'];
+                          LoggedInUserInfo.url = ss.data.data['image_url'];
                           return WelcomeScreen();
                         } else {
                           return IntermediateMainScreen(userSnapshot.data.uid);
@@ -78,6 +82,7 @@ class MyApp extends StatelessWidget {
             AddGame.routeName: (ctx) => AddGame(),
             DisplayAvailableGames.routeName: (ctx) => DisplayAvailableGames(),
             IndividualChatScreen.routeName: (ctx) => IndividualChatScreen(),
+            UserGamesScreen.routeName: (ctx) => UserGamesScreen(),
           }),
     );
   }

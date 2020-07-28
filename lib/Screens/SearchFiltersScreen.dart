@@ -185,9 +185,13 @@ class _SearchFiltersScreenState extends State<SearchFiltersScreen> {
                     height: 20,
                   ),
                   if (_isPhysical)
-                    RaisedButton.icon(
+                    OutlineButton.icon(
+                      borderSide: BorderSide(color: Colors.pink),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(18.0),
+                          side: BorderSide(color: Colors.blueAccent)),
                       icon: Icon(Icons.location_on),
-                      label: Text("Changed Default Location"),
+                      label: Text("Change Default Location"),
                       onPressed: () {
                         _selectOnMap();
                       },

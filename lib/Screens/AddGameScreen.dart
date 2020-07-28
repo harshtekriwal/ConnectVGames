@@ -86,8 +86,9 @@ class _AddGameState extends State<AddGame> {
         'longitude': lng,
         'distanceRange': maxDistanceRadius,
         'playDate': playingTime,
-        'searchindex': indexList
+        'searchindex': indexList,
       });
+
       setState(() {
         _isLoading = false;
       });
@@ -176,6 +177,7 @@ class _AddGameState extends State<AddGame> {
                 child: Column(
                   children: <Widget>[
                     TextFormField(
+                      maxLength: 15,
                       validator: (value) {
                         if (value.length < 3) {
                           return "Please enter atleast 3 characters.";
@@ -211,7 +213,10 @@ class _AddGameState extends State<AddGame> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: <Widget>[
-                              RaisedButton.icon(
+                              OutlineButton.icon(
+                                borderSide: BorderSide(color: Colors.pink),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(18.0)),
                                 icon: Icon(Icons.map),
                                 label: Text("Select on Map"),
                                 onPressed: () {
@@ -221,7 +226,10 @@ class _AddGameState extends State<AddGame> {
                               SizedBox(
                                 height: 20,
                               ),
-                              RaisedButton.icon(
+                              OutlineButton.icon(
+                                borderSide: BorderSide(color: Colors.pink),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(18.0)),
                                 icon: Icon(Icons.location_on),
                                 label: Text("Current Location"),
                                 onPressed: () {
@@ -312,7 +320,8 @@ class _AddGameState extends State<AddGame> {
                     ),
                     _isLoading == true
                         ? CircularProgressIndicator()
-                        : RaisedButton(
+                        : OutlineButton(
+                            borderSide: BorderSide(color: Colors.pink),
                             child: Text("Submit"),
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(18.0),

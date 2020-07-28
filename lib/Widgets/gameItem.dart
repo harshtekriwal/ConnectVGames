@@ -29,11 +29,16 @@ class GameItem extends StatelessWidget {
         ? userId + LoggedInUserInfo.id
         : LoggedInUserInfo.id + userId;
     try {
+      final image =
+          await Firestore.instance.collection('users').document(userId).get();
+      final imageUrl = image.data['image_url'];
       await Firestore.instance.collection('Chats').document(append).setData({
         'idOne': userId,
         'idTwo': LoggedInUserInfo.id,
         'userNameOne': userName,
-        'userNameTwo': LoggedInUserInfo.name
+        'userNameTwo': LoggedInUserInfo.name,
+        'imageOne': imageUrl,
+        'imageTwo': LoggedInUserInfo.url
       });
       print("sucess");
     } on PlatformException catch (err) {
@@ -112,31 +117,29 @@ class GameItem extends StatelessWidget {
                 children: <Widget>[
                   Text(
                     this.gameName,
-                    style: TextStyle(fontSize: 25),
+                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                   ),
                   Text(
-                      'Game Date : ${DateFormat.yMMMd().format(gameTime.toDate())}'),
+                      'Date : ${DateFormat.yMMMd().format(gameTime.toDate())}'),
                   ListTile(
                     leading: Text(
-                      'Game Type : ${this.gameType}',
+                      'Type : ${this.gameType}',
                       style: TextStyle(fontSize: 17),
                     ),
                     title: Text('Added by : $userName'),
-                    trailing: IconButton(
-                      icon: Icon(Icons.thumb_up),
+                    trailing: OutlineButton.icon(
+                      borderSide: BorderSide(color: Colors.black),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(18.0)),
+                      label: Text("Play"),
                       onPressed: () {
                         connectUsers();
                       },
-                      color: Colors.black,
+                      icon: Icon(Icons.thumb_up),
                     ),
                   )
                 ]),
-            decoration: BoxDecoration(
-                gradient: LinearGradient(colors: [
-                  Colors.blue.withOpacity(0.2),
-                  Colors.black38,
-                ], begin: Alignment.topCenter, end: Alignment.bottomRight),
-                borderRadius: BorderRadius.circular(15))),
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(15))),
       ),
       elevation: 4,
       margin: EdgeInsets.all(10),

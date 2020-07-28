@@ -44,7 +44,8 @@ dependencies:
   great_circle_distance: ^1.0.1
   flutter_google_places: ^0.2.5
   google_maps_webservice: ^0.0.17
-
+  image_picker: ^0.6.7+4
+  firebase_storage: ^3.1.6
 
 
 

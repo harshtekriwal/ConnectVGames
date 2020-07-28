@@ -108,8 +108,8 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
 
                       await FirebaseAuth.instance
                           .signInWithCredential(credential);
-                          Navigator.of(context).pop();
-                          Navigator.pop(context);
+                      Navigator.of(context).pop();
+                      Navigator.pop(context);
                     } on PlatformException catch (err) {
                       Toast.show(err.message, context,
                           duration: 10, gravity: Toast.BOTTOM);
@@ -217,7 +217,10 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
         ),
         child: Center(
           child: Card(
-            margin: EdgeInsets.all(20),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+            elevation: 5,
+            margin: EdgeInsets.all(25),
             child: SingleChildScrollView(
                 child: Padding(
               padding: EdgeInsets.all(16),
@@ -225,6 +228,14 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
                 key: _formkey,
                 child: Column(
                   children: <Widget>[
+                    Container(
+                      child: Text(
+                        'Login with Phone',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 20),
+                      ),
+                      width: double.infinity,
+                    ),
                     TextFormField(
                       decoration: InputDecoration(labelText: 'Phone Number'),
                       keyboardType: TextInputType.phone,
@@ -241,11 +252,15 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
                     _isLoading
                         ? CircularProgressIndicator()
                         : RaisedButton(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(25)),
                             child: Center(
                               child: Text("Login"),
                             ),
                             onPressed: () {
-                              _verifyPhoneNo(_phoneNo.trim(), context);
+                              _verifyPhoneNo(
+                                  _phoneNo == null ? '' : _phoneNo.trim(),
+                                  context);
                             },
                           )
                   ],

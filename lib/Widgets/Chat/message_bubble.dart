@@ -5,7 +5,9 @@ class MessageBubble extends StatelessWidget {
   final String message;
   final bool isMe;
   final Key key;
-  MessageBubble(this.username, this.message, this.isMe, this.key);
+  final userImage;
+  MessageBubble(
+      this.username, this.message, this.userImage, this.isMe, this.key);
   @override
   Widget build(BuildContext context) {
     return Stack(children: [
@@ -15,7 +17,7 @@ class MessageBubble extends StatelessWidget {
         children: <Widget>[
           Container(
             decoration: BoxDecoration(
-              color: isMe ? Colors.grey[300] : Theme.of(context).accentColor,
+              border: Border.all(color: Colors.black, width: 0.6),
               borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(12),
                   topRight: Radius.circular(12),
@@ -58,7 +60,9 @@ class MessageBubble extends StatelessWidget {
           top: 0,
           left: isMe ? null : 120,
           right: isMe ? 120 : null,
-          child: CircleAvatar()),
+          child: CircleAvatar(
+            backgroundImage: NetworkImage(userImage),
+          )),
     ], overflow: Overflow.visible);
   }
 }
